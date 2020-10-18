@@ -5,6 +5,7 @@ This library helps you to implement the MVVM-Coordinator pattern by including ev
 #### Contents:
 
 - [Installation](#installation)
+- [Usage](#usage)
 - [Example](#example)
     - [Pure Swift + dependency injection](#pure-swift--dependency-injection)
     - [ReactiveSwift + Signals](#reactiveswift--signals)

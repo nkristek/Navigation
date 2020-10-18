@@ -2,6 +2,29 @@
 
 This library helps you to implement the MVVM-Coordinator pattern by including everything you need to do it!
 
+#### Contents:
+
+- [Installation](#installation)
+- [Example](#example)
+    - [Pure Swift + dependency injection](#pure-swift--dependency-injection)
+    - [ReactiveSwift + Signals](#reactiveswift--signals)
+- [Contribution](#contribution)
+
+## Installation
+
+### Swift Package Manager
+
+#### Automatically in Xcode:
+
+- Click **File > Swift Packages > Add Package Dependency...**  
+- Use the package URL `https://github.com/nkristek/Navigation` to add Navigation to your project.
+
+#### Manually in your `Package.swift` file:
+
+```swift
+.package(url: "https://github.com/nkristek/Navigation", from: "0.1.1")
+```
+
 ## Example
 ### Pure Swift + dependency injection
 
@@ -327,3 +350,7 @@ final class AppCoordinator: Coordinator, ReactiveExtensionsProvider {
 ```
 
 </details>
+
+## Contribution
+
+If you find a bug feel free to open an issue. Contributions are also appreciated.

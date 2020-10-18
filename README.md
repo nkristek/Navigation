@@ -38,12 +38,8 @@ self.window = window
 let coordinator = AppCoordinator()
 self.coordinator = coordinator
 
-let itemListCoordinator = ItemListCoordinator(appCoordinator: coordinator)
-self.itemListCoordinator = itemListCoordinator // needed because of unowned reference
-let configurationCoordinator = ConfigurationCoordinator(appCoordinator: coordinator)
-self.configurationCoordinator = configurationCoordinator // needed because of unowned reference
-let viewModel = ItemListViewModel(coordinator: itemListCoordinator.eraseToUnownedCoordinator(),
-                                  configurationCoordinator: configurationCoordinator.eraseToUnownedCoordinator())
+let viewModel = ItemListViewModel(coordinator: coordinator.eraseToUnownedCoordinator(transform: AppRoute.itemList),
+                                  configurationCoordinator: coordinator.eraseToUnownedCoordinator(transform: AppRoute.configuration))
 coordinator.handle(route: .start(viewModel))
 
 window.rootViewController = coordinator.rootViewController
@@ -170,46 +166,6 @@ final class AppCoordinator: Coordinator {
 	
 	private func handle(route: AppRoute, configurationRoute: ConfigurationRoute) {
 		// ...
-	}
-}
-
-final class ItemListCoordinator: Coordinator {
-	// MARK: - Properties
-	
-	private let appCoordinator: AppCoordinator
-	
-	// MARK: - Init
-	
-	init(appCoordinator: AppCoordinator) {
-		self.appCoordinator = appCoordinator
-	}
-	
-	// MARK: - Coordinator
-	
-	var rootViewController: UIViewController { appCoordinator.rootViewController }
-	
-	func handle(route: ItemListRoute) {
-		appCoordinator.handle(route: .itemList(route))
-	}
-}
-
-final class ConfigurationCoordinator: Coordinator {
-	// MARK: - Properties
-	
-	private let appCoordinator: AppCoordinator
-	
-	// MARK: - Init
-	
-	init(appCoordinator: AppCoordinator) {
-		self.appCoordinator = appCoordinator
-	}
-	
-	// MARK: - Coordinator
-	
-	var rootViewController: UIViewController { appCoordinator.rootViewController }
-	
-	func handle(route: ConfigurationRoute) {
-		appCoordinator.handle(route: .configuration(route))
 	}
 }
 ```

@@ -7,6 +7,11 @@ extension Coordinator {
     public func eraseToAnyCoordinator() -> AnyCoordinator<Route> {
         return .init(coordinator: self)
     }
+	
+	@inlinable
+	public func eraseToAnyCoordinator<TargetRoute>(transform: @escaping (TargetRoute) -> Route) -> AnyCoordinator<TargetRoute> {
+		return .init(coordinator: self, transform: transform)
+	}
 }
 
 // MARK: - AnyCoordinator
@@ -27,6 +32,12 @@ public final class AnyCoordinator<Route>: Coordinator {
         _rootViewController = { coordinator.rootViewController }
         _handle = coordinator.handle(route:)
     }
+	
+	public init<CoordinatorType: Coordinator>(coordinator: CoordinatorType,
+											  transform: @escaping (Route) -> CoordinatorType.Route) {
+		_rootViewController = { coordinator.rootViewController }
+		_handle = { coordinator.handle(route: transform($0)) }
+	}
     
     // MARK: - Coordinator
     

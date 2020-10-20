@@ -33,11 +33,24 @@ Where should I instantiate a `UIViewController` or call methods like `navigation
 
 I decided to look into the coordinator pattern and came up with the following solution:
 
+### Architecture
+
 ![architecture](./Resources/Architecture.png "MVVM-Coordinator architecture")
 
-For each viewmodel that "navigates", there should be a corresponding route. This route shall contain every piece of information needed, to perform the navigation, while staying completely UI and platform independent.
+The coordinator is responsible for the view hierarchy and does not contain any business logic. To keep matters simple, the protocol should be very lightweight. This library proposes the following protocol:
+```swift
+public protocol Coordinator: AnyObject {
+    associatedtype Route
+    var rootViewController: UIViewController { get }
+    func handle(route: Route)
+}
+```
+- To display a coordinator hierarchy one simply has to show the given `rootViewController`, everything else is taken care of by the coordinator itself.
+- To invoke a transition/navigation one has to call the `handle(route:)` method and passing in a route that contains all the information the coordinator needs to know what has to happen.
 
-Let's imagine a screen that displays a list of items (`String`) and a configuration button. After tapping an item or the configuration button the respective transition should occur.
+> Note: Since protocols with `associatedtype` are kind of hard to use without making heavy use of generics, there are extensions that erase the type to either `AnyCoordinator` (strong reference) or `UnownedCoordinator` (unowned reference) by using `eraseToAnyCoordinator` or `eraseToUnownedCoordinator` respectively. 
+
+Let's imagine a screen that displays a list of items and a configuration button. After tapping an item or the configuration button, the respective transition should occur.
 For reference, this shall be the protocol for this viewmodel:
 ```swift
 protocol ItemListViewModelType {
@@ -47,7 +60,11 @@ protocol ItemListViewModelType {
 }
 ```
 
-The corresponding route has to account for those to transitions, item pressed and connection pressed. Since enums are very powerful in Swift, let's use them for this task:
+### Route
+
+For each viewmodel that "navigates", there should be a corresponding route. This route shall contain every piece of information needed, to perform the navigation, while staying completely UI and platform independent.
+
+The corresponding route has to account for the two interactions, item pressed and connection pressed. Since enums are very powerful in Swift, let's use them for this task:
 
 ```swift
 enum ItemListRoute {
@@ -56,18 +73,12 @@ enum ItemListRoute {
 }
 ```
 
-Whenever the viewmodel wants to perform a navigation (one of the input methods is called), it calls the `handle(route:)` method on a given coordinator. The protocol for a coordinator (provided by this library) looks like this:
-```swift
-public protocol Coordinator: AnyObject {
-    associatedtype Route
-    var rootViewController: UIViewController { get }
-    func handle(route: Route)
-}
-```
+### ViewModel
 
-Since protocols with `associatedtype` are kind of hard to use without making heavy use of generics, there are extensions that erase the type to either `AnyCoordinator` (strong reference) or `UnownedCoordinator` (unowned reference) by using `eraseToAnyCoordinator` or `eraseToUnownedCoordinator` respectively. 
+Whenever the viewmodel wants to perform a navigation (one of the input methods is called), it calls the `handle(route:)` method on a given coordinator.
+
 > Note: Since the coordinator holds a strong reference to each viewcontroller and each viewcontroller holds a strong reference to the corresponding viewmodel, the viewmodel is **not** allowed to keep a strong reference to the coordinator to avoid **reference cycles**. 
-Instead, the viewmodel shall receive an `UnownedCoordinator<Route>`.
+Instead, the viewmodel shall receive an `UnownedCoordinator<Route>` (using `eraseToUnownedCoordinator`).
 
 ```swift
 final class ItemListViewModel: ItemListViewModelType {
@@ -90,10 +101,11 @@ final class ItemListViewModel: ItemListViewModelType {
 }
 ```
 
+If the `ConfigurationViewModel` itself performs navigation, just add this dependency as a separate coordinator parameter. Don't worry, both routes will be implemented by the same coordinator.
+
 <details>
   <summary>Nested coordinator dependency</summary>
 
-If the `ConfigurationViewModel` itself performs navigation, just add this dependency as a separate coordinator parameter. Don't worry, both routes will be implemented by the same coordinator.
 ```swift
 final class ItemListViewModel: ItemListViewModelType {
     private let coordinator: UnownedCoordinator<ItemListRoute>
@@ -121,6 +133,8 @@ final class ItemListViewModel: ItemListViewModelType {
 </details>
 
 Great, now our viewmodel is done. As you can clearly see, we don't have any dependency on anything UI related anymore and since the coordinator implementation is easily mocked, it is very easy to test.
+
+### Coordinator
 
 Now let's get started with the coordinator implementation. First of all, since there probably will be multiple different routes that need to be handled, we'll define a more generic `AppRoute` which combines all those and provides an additional case for the starting route:
 ```swift
@@ -166,10 +180,11 @@ final class AppCoordinator: Coordinator {
 }
 ```
 
+There is also some syntactic sugar in form of a `StackNavigator<Route>` which provides more functionality regarding programatic pop behavior (e.g. popping back to a specific route):
+
 <details>
   <summary>StackNavigator<Route></summary>
-	
-There is also some syntactic sugar in form of a `StackNavigator<Route>` which provides more functionality regarding programatic pop behavior (e.g. popping back to a specific route):
+	  
 ```swift
 final class AppCoordinator: Coordinator {
     private let navigator: StackNavigator<AppRoute>
@@ -208,8 +223,11 @@ final class AppCoordinator: Coordinator {
 
 </details>
 
+### AppDelegate
+
 In `application(_:didFinishLaunchingWithOptions:)` we only need to instantiate the `AppCoordinator` and set its `rootViewController` to the `rootViewController` property of the window.
 ```swift
+// instantiate the window
 let window = UIWindow(windowScene: windowScene)
 self.window = window
 
@@ -227,6 +245,8 @@ coordinator.handle(route: .start(viewModel))
 window.rootViewController = coordinator.rootViewController
 window.makeKeyAndVisible()
 ```
+
+### Final notes
 
 Congratulations, your MVVM-C application is up and running 🎉
 

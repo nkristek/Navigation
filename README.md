@@ -70,7 +70,7 @@ protocol ItemListViewModelType {
 
 For each viewmodel that "navigates", there should be a corresponding route. This route shall contain every piece of information needed, to perform the navigation, while staying completely UI and platform independent.
 
-The corresponding route has to account for the two interactions, item pressed and connection pressed. Since enums are very powerful in Swift, let's use them for this task:
+The corresponding route has to account for the two interactions, item pressed and configuration pressed. Since enums are very powerful in Swift, let's use them for this task:
 
 ```swift
 enum ItemListRoute {
@@ -248,7 +248,7 @@ window.rootViewController = coordinator.rootViewController
 window.makeKeyAndVisible()
 ```
 
-> Note: In this example, when calling `eraseToUnownedCoordinator(transform:)` we provide a closure on how to map the `ItemListRoute` or `ConfigurationRoute` to the `AppRoute` enum the coordinator expects. This way we convert the coordinator from accepting an `AppRoute` to accepting the corresponding child route.
+> Note: In this example, when calling `eraseToUnownedCoordinator(transform:)`, we provide a closure on how to map the `ItemListRoute` or `ConfigurationRoute` to the `AppRoute` enum the coordinator expects. This way we convert the coordinator from accepting an `AppRoute` to accepting the corresponding child route.
 
 ### Final notes
 
@@ -291,7 +291,7 @@ enum ItemListRoute {
 protocol ItemListViewModelType {
     var items: [String] { get }
     func itemPressed(_ item: String)
-    func connectionPressed()
+    func configurationPressed()
 }
 
 final class ItemListViewModel: ItemListViewModelType {
@@ -310,7 +310,7 @@ final class ItemListViewModel: ItemListViewModelType {
         coordinator.handle(route: .item(item))
     }
 	
-    func connectionPressed() {
+    func configurationPressed() {
         let viewModel = ConfigurationViewModel(coordinator: configurationCoordinator)
         coordinator.handle(route: .configuration(viewModel))
     }
@@ -400,7 +400,7 @@ protocol ItemListViewModelType {
     var navigationSignal: Signal<ItemListRoute, Never> { get }
     var items: Property<[String]> { get }
     var itemPressedObserver: Signal<String, Never>.Observer { get }
-    var connectionPressedObserver: Signal<Void, Never>.Observer { get }
+    var configurationPressedObserver: Signal<Void, Never>.Observer { get }
 }
 
 final class ItemListViewModel: ItemListViewModelType {
@@ -408,14 +408,14 @@ final class ItemListViewModel: ItemListViewModelType {
     let (navigationSignal, navigationObserver) = Signal<ItemListRoute, Never>.pipe()
     let items = Property(value: ["First", "Second", "Third"])
     let (itemPressedSignal, itemPressedObserver) = Signal<String, Never>.pipe()
-    let (connectionPressedSignal, connectionPressedObserver) = Signal<Void, Never>.pipe()
+    let (configurationPressedSignal, configurationPressedObserver) = Signal<Void, Never>.pipe()
 
     init() {
         lifetime += itemPressedSignal
             .map(ItemListRoute.item)
             .observe(navigationObserver)
 		
-        lifetime += connectionPressedSignal
+        lifetime += configurationPressedSignal
             .map { _ in
                 let viewModel = ConfigurationViewModel()
                 return .configuration(viewModel)

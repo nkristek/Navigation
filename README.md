@@ -32,6 +32,9 @@ First of all, let's start with an issue I had with MVVM on iOS:
 Where should I instantiate a `UIViewController` or call methods like `navigationController.pushViewController(:animated:)`? The viewmodel should decide when a navigation should occur, but it certainly doesn't make sense to call these methods there or interact with `UIKit` directly in the viewmodel.
 
 I decided to look into the coordinator pattern and came up with the following solution:
+
+![architecture](https://github.com/nkristek/Navigation/raw/master/Resources/Architecture.png "MVVM-Coordinator architecture")
+
 For each viewmodel that "navigates", there should be a corresponding route. This route shall contain every piece of information needed, to perform the navigation, while staying completely UI and platform independent.
 
 Let's imagine a screen that displays a list of items (`String`) and a configuration button. After tapping an item or the configuration button the respective transition should occur.

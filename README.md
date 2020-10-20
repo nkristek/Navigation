@@ -35,7 +35,8 @@ This library offers some convenience classes and protocols to implement the coor
 ## Usage
 
 First of all, let's start with an issue I had with MVVM on iOS: 
-Where should I instantiate a `UIViewController` or call methods like `navigationController.pushViewController(:animated:)`? The viewmodel should decide when a navigation should occur, but it certainly doesn't make sense to call these methods there or interact with `UIKit` directly in the viewmodel.
+Where should I instantiate views (`UIViewController`) or call methods like `navigationController.pushViewController(:animated:)` to push views onto the stack? 
+Of course, the viewmodel should decide when a navigation should occur, but it certainly doesn't make sense to call these methods there or interact with `UIKit` at all, as viewmodels should be as platform independent as possible.
 
 I decided to look into the coordinator pattern and came up with the following solution:
 
@@ -68,9 +69,9 @@ protocol ItemListViewModelType {
 
 ### Route
 
-For each viewmodel that "navigates", there should be a corresponding route. This route shall contain every piece of information needed, to perform the navigation, while staying completely UI and platform independent.
+For each viewmodel that "navigates", there should be a corresponding route. A route contains every piece of information needed to perform the navigation, while staying completely UI and platform independent.
 
-The corresponding route has to account for the two interactions, item pressed and configuration pressed. Since enums are very powerful in Swift, let's use them for this task:
+The corresponding route has to account for the two interactions, item pressed and configuration pressed. Since enums with associated values are very powerful in Swift, let's use them for this task:
 
 ```swift
 enum ItemListRoute {

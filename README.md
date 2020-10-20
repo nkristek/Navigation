@@ -371,7 +371,7 @@ final class AppCoordinator: Coordinator {
 ### ReactiveSwift + Signals
 
 This example uses signals, making it possible to build viewmodels without having reference a coordinator directly.
-Viewmodels will push new values onto their `navigationSignal: Signal<Route, Never>` which a coordinator subscribes to and acts upon accordingly. This makes the viewmodels completely unaware that they are used in a coordinator flow. Using `.take(duringLifetimeOf: viewController)` the coordinator limits the subscription to this signal so navigations are only performed while the corresponding viewcontroller is in the view hierarchy.
+Viewmodels will push new values onto their `navigationSignal: Signal<Route, Never>` which a coordinator subscribes to and acts upon accordingly. This makes the viewmodels completely unaware that they are used in a coordinator flow. By using `.take(duringLifetimeOf: viewController)` the coordinator limits the lifetime of the observation of this signal so navigations are only performed while the corresponding viewcontroller is in the view hierarchy.
 
 <details>
   <summary>AppDelegate</summary>
@@ -483,7 +483,10 @@ final class AppCoordinator: Coordinator, ReactiveExtensionsProvider {
 }
 ```
 
-As syntactic sugar for coordinators in ReactiveSwift you can define some reactive extensions:
+### Syntactic Sugar
+
+> As syntactic sugar for coordinators in ReactiveSwift you can define some reactive extensions:
+
 ```swift
 extension Reactive where Base: Coordinator {
     var handle: BindingTarget<Base.Route> {

@@ -29,7 +29,7 @@ This library offers some convenience classes and protocols to implement the coor
 ## Usage
 
 First of all, let's start with an issue I had with MVVM on iOS: 
-Where should I instantiate a `UIViewController` or call methods like `navigationController.pushViewController(:animated:)`? The viewmodel should decide when a navigation should occur, but it certainly doesn't make sense to call these methods there or even import `UIKit` in the file where the viewmodel resides.
+Where should I instantiate a `UIViewController` or call methods like `navigationController.pushViewController(:animated:)`? The viewmodel should decide when a navigation should occur, but it certainly doesn't make sense to call these methods there or interact with `UIKit` directly in the viewmodel.
 
 I decided to look into the coordinator pattern and came up with the following solution:
 For each viewmodel that "navigates", there should be a corresponding route. This route shall contain every piece of information needed, to perform the navigation, while staying completely UI and platform independent.

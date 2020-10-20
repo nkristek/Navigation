@@ -254,10 +254,12 @@ window.makeKeyAndVisible()
 
 Congratulations, your MVVM-C application is up and running 🎉
 
-Below there are a couple of examples on how to use this pattern reactively. Among other benefits, this has makes it possible to decouple the viewmodel and coordinator even further by using signals.
+Below there are a couple of examples on how to use this pattern reactively. Among other benefits, this makes it possible to decouple the viewmodel and coordinator even further by using signals.
 
 ## Example
 ### Pure Swift + dependency injection
+
+> For more information please read through the [Usage](#usage) section.
 
 <details>
   <summary>AppDelegate</summary>
@@ -368,6 +370,9 @@ final class AppCoordinator: Coordinator {
 
 ### ReactiveSwift + Signals
 
+This example uses signals, making it possible to build viewmodels without having reference a coordinator directly.
+Viewmodels will push new values onto their `navigationSignal: Signal<Route, Never>` which a coordinator subscribes to and acts upon accordingly. This makes the viewmodels completely unaware that they are used in a coordinator flow. Using `.take(duringLifetimeOf: viewController)` the coordinator limits the subscription to this signal so navigations are only performed while the corresponding viewcontroller is in the view hierarchy.
+
 <details>
   <summary>AppDelegate</summary>
 	
@@ -476,6 +481,19 @@ final class AppCoordinator: Coordinator, ReactiveExtensionsProvider {
         }
     }
 }
+```
+
+As syntactic sugar for coordinators in ReactiveSwift you can define some reactive extensions:
+```swift
+extension Reactive where Base: Coordinator {
+    var handle: BindingTarget<Base.Route> {
+        makeBindingTarget { $0.handle(route: $1) }
+    }
+}
+
+extension AnyCoordinator: ReactiveExtensionsProvider { }
+
+extension UnownedCoordinator: ReactiveExtensionsProvider { }
 ```
 
 </details>

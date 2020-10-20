@@ -40,7 +40,7 @@ For reference, this shall be the protocol for this viewmodel:
 protocol ItemListViewModelType {
     var items: [String] { get }
     func itemPressed(_ item: String)
-    func connectionPressed()
+    func configurationPressed()
 }
 ```
 
@@ -80,7 +80,7 @@ final class ItemListViewModel: ItemListViewModelType {
         coordinator.handle(route: .item(item))
     }
 	
-    func connectionPressed() {
+    func configurationPressed() {
         let viewModel = ConfigurationViewModel()
         coordinator.handle(route: .configuration(viewModel))
     }
@@ -108,7 +108,7 @@ final class ItemListViewModel: ItemListViewModelType {
         coordinator.handle(route: .item(item))
     }
 	
-    func connectionPressed() {
+    func configurationPressed() {
         let viewModel = ConfigurationViewModel(coordinator: configurationCoordinator)
         coordinator.handle(route: .configuration(viewModel))
     }

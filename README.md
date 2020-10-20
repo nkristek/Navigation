@@ -55,7 +55,7 @@ public protocol Coordinator: AnyObject {
 - To display a coordinator hierarchy one simply has to show the given `rootViewController`, everything else is taken care of by the coordinator itself.
 - To invoke a transition/navigation one has to call the `handle(route:)` method and passing in a route that contains all the information the coordinator needs to know what has to happen.
 
-> Note: Since protocols with `associatedtype` are kind of hard to use without making heavy use of generics, there are extensions that erase the type to either `AnyCoordinator` (strong reference) or `UnownedCoordinator` (unowned reference) by using `eraseToAnyCoordinator` or `eraseToUnownedCoordinator` respectively. 
+> Note: Since protocols with `associatedtype` are kind of hard to use without making heavy use of generics, there are extensions that erase the type to either `AnyCoordinator<Route>` (strong reference) or `UnownedCoordinator<Route>` (unowned reference) by using `eraseToAnyCoordinator` or `eraseToUnownedCoordinator` respectively. 
 
 Let's imagine a screen that displays a list of items and a configuration button. After tapping an item or the configuration button, the respective transition should occur.
 For reference, this shall be the protocol for this viewmodel:

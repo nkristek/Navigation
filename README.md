@@ -156,7 +156,7 @@ final class AppCoordinator: Coordinator {
         switch route {
         case let .start(viewModel):
             let viewController = ItemListViewController(viewModel: viewModel)
-            navigationController.setViewControllers([viewController], animated: true)
+            navigationController.setViewControllers([viewController], animated: false)
 
         case let .itemList(itemListRoute):
             switch itemListRoute {

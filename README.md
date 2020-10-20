@@ -33,7 +33,7 @@ Where should I instantiate a `UIViewController` or call methods like `navigation
 
 I decided to look into the coordinator pattern and came up with the following solution:
 
-![architecture](https://github.com/nkristek/Navigation/raw/master/Resources/Architecture.png "MVVM-Coordinator architecture")
+![architecture](./Resources/Architecture.png "MVVM-Coordinator architecture")
 
 For each viewmodel that "navigates", there should be a corresponding route. This route shall contain every piece of information needed, to perform the navigation, while staying completely UI and platform independent.
 

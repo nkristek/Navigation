@@ -262,7 +262,9 @@ Below there are a couple of examples on how to use this pattern reactively. Amon
 > For more information please read through the [Usage](#usage) section.
 
 <details>
-  <summary>AppDelegate</summary>
+	<summary>Expand</summary>
+
+#### AppDelegate
 	
 ```swift
 let window = UIWindow(windowScene: windowScene)
@@ -279,10 +281,7 @@ window.rootViewController = coordinator.rootViewController
 window.makeKeyAndVisible()
 ```
 
-</details>
-
-<details>
-  <summary>ViewModel</summary>
+#### ViewModel
 	
 ```swift
 enum ItemListRoute {
@@ -319,10 +318,7 @@ final class ItemListViewModel: ItemListViewModelType {
 }
 ```
 
-</details>
-
-<details>
-  <summary>Coordinator</summary>
+#### Coordinator
 	
 ```swift
 enum AppRoute {
@@ -374,7 +370,25 @@ This example uses signals, making it possible to build viewmodels without having
 Viewmodels will push new values onto their `navigationSignal: Signal<Route, Never>` which a coordinator subscribes to and acts upon accordingly. This makes the viewmodels completely unaware that they are used in a coordinator flow. By using `.take(duringLifetimeOf: viewController)` the coordinator limits the lifetime of the observation of this signal so navigations are only performed while the corresponding viewcontroller is in the view hierarchy.
 
 <details>
-  <summary>AppDelegate</summary>
+    <summary>Expand</summary>
+    
+#### Syntactic Sugar
+
+> As syntactic sugar for coordinators in ReactiveSwift you can define some reactive extensions:
+
+```swift
+extension Reactive where Base: Coordinator {
+    var handle: BindingTarget<Base.Route> {
+        makeBindingTarget { $0.handle(route: $1) }
+    }
+}
+
+extension AnyCoordinator: ReactiveExtensionsProvider { }
+
+extension UnownedCoordinator: ReactiveExtensionsProvider { }
+```
+
+#### AppDelegate
 	
 ```swift
 let window = UIWindow(windowScene: windowScene)
@@ -390,10 +404,7 @@ window.rootViewController = coordinator.rootViewController
 window.makeKeyAndVisible()
 ```
 
-</details>
-
-<details>
-  <summary>ViewModel</summary>
+#### ViewModel
 	
 ```swift
 enum ItemListRoute {
@@ -430,10 +441,7 @@ final class ItemListViewModel: ItemListViewModelType {
 }
 ```
 
-</details>
-
-<details>
-  <summary>Coordinator</summary>
+#### Coordinator
 	
 ```swift
 enum AppRoute {
@@ -481,22 +489,6 @@ final class AppCoordinator: Coordinator, ReactiveExtensionsProvider {
         }
     }
 }
-```
-
-### Syntactic Sugar
-
-> As syntactic sugar for coordinators in ReactiveSwift you can define some reactive extensions:
-
-```swift
-extension Reactive where Base: Coordinator {
-    var handle: BindingTarget<Base.Route> {
-        makeBindingTarget { $0.handle(route: $1) }
-    }
-}
-
-extension AnyCoordinator: ReactiveExtensionsProvider { }
-
-extension UnownedCoordinator: ReactiveExtensionsProvider { }
 ```
 
 </details>

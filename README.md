@@ -242,6 +242,8 @@ window.rootViewController = coordinator.rootViewController
 window.makeKeyAndVisible()
 ```
 
+> Note: In this example, when calling `eraseToUnownedCoordinator(transform:)` we provide a closure on how to map the `ItemListRoute` or `ConfigurationRoute` to the `AppRoute` enum the coordinator expects. This way we convert the coordinator from accepting an `AppRoute` to accepting the corresponding child route.
+
 ### Final notes
 
 Congratulations, your MVVM-C application is up and running 🎉

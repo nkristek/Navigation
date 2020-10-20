@@ -6,6 +6,10 @@ This library offers some convenience classes and protocols to implement the coor
 
 - [Installation](#installation)
 - [Usage](#usage)
+    - [Architecture](#architecture)
+    - [Route](#route)
+    - [ViewModel](#viewmodel)
+    - [Coordinator](#coordinator)
 - [Example](#example)
     - [Pure Swift + dependency injection](#pure-swift--dependency-injection)
     - [ReactiveSwift + Signals](#reactiveswift--signals)

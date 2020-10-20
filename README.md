@@ -150,10 +150,6 @@ Now let's implement this route in the coordinator:
 final class AppCoordinator: Coordinator {
     private let navigationController = UINavigationController()
 
-    init() {
-        navigator = StackNavigator(navigationController: navigationController)
-    }
-
     var rootViewController: UIViewController { navigationController }
     
     func handle(route: AppRoute) {

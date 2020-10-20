@@ -10,6 +10,8 @@ This library offers some convenience classes and protocols to implement the coor
     - [Route](#route)
     - [ViewModel](#viewmodel)
     - [Coordinator](#coordinator)
+    - [AppDelegate](#appdelegate)
+    - [Final notes](#final-notes)
 - [Example](#example)
     - [Pure Swift + dependency injection](#pure-swift--dependency-injection)
     - [ReactiveSwift + Signals](#reactiveswift--signals)

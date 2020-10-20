@@ -445,8 +445,8 @@ final class AppCoordinator: Coordinator, ReactiveExtensionsProvider {
         case let .start(viewModel):
             let viewController = ItemListViewController(viewModel: viewModel)
             reactive.handle <~ viewModel.navigationSignal
-			    .take(duringLifetimeOf: viewController)
-			    .map(AppRoute.itemList)
+                .take(duringLifetimeOf: viewController)
+                .map(AppRoute.itemList)
             navigator.set([(route: route, viewController: viewController)], animated: false)
 
         case let .itemList(itemListRoute):
@@ -458,8 +458,8 @@ final class AppCoordinator: Coordinator, ReactiveExtensionsProvider {
             case let .configuration(viewModel):
                 let viewController = ConfigurationViewController(viewModel: viewModel)
                 reactive.handle <~ viewModel.navigationSignal
-				    .take(duringLifetimeOf: viewController)
-				    .map(AppRoute.configuration)
+                    .take(duringLifetimeOf: viewController)
+                    .map(AppRoute.configuration)
                 navigator.push(route: route, viewController: viewController, animated: true)
             }
 

@@ -253,7 +253,8 @@ window.makeKeyAndVisible()
 
 > Note: In this example, when calling `eraseToUnownedCoordinator(transform:)`, we provide a closure on how to map the `ItemListRoute` or `ConfigurationRoute` to the `AppRoute` enum the coordinator expects. This way we convert the coordinator from accepting an `AppRoute` to accepting the corresponding child route.
 
-Syntactic sugar: In this example you could also shorten the `transform` as follows, but I wanted to be more explicit above to make it more readable:
+#### Syntactic sugar
+In the previous example you could also shorten the `transform` as follows, but I wanted to be more explicit to make it easier to understand:
 ```swift
 let viewModel = ItemListViewModel(
     coordinator: coordinator.eraseToUnownedCoordinator(transform: AppRoute.itemList),
